@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 앱 기본 테마 (실제 화면 스타일은 Compose MoimTheme이 담당) -->
+    <style name="Theme.Moim" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/moim_white</item>
+    </style>
+
+    <!-- 앱 실행 직후 잠깐 보이는 스플래시 -->
+    <style name="Theme.Moim.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/moim_white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Moim</item>
+    </style>
+</resources>
