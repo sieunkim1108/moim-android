@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML에서만 쓰는 색 (스플래시, 런처 아이콘). Compose 색은 ui/theme/Color.kt에 정의 -->
+<resources>
+    <color name="moim_white">#FFFFFF</color>
+    <color name="moim_sky_blue">#DCEEFF</color>
+</resources>

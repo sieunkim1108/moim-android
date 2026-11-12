@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 모든 UI 문자열은 여기에 한국어로 모아둔다 -->
+<resources>
+    <string name="app_name">moim</string>
+
+    <!-- 공통 -->
+    <string name="common_back">뒤로 가기</string>
+    <string name="common_close">닫기</string>
+    <string name="common_confirm">확인</string>
+    <string name="common_cancel">취소</string>
+    <string name="common_clear">지우기</string>
+    <string name="common_coming_soon">다음 단계에서 만들 화면이에요 💙</string>
+    <string name="common_show_password">비밀번호 보기</string>
+    <string name="common_hide_password">비밀번호 숨기기</string>
+    <string name="common_select">선택해 주세요</string>
+    <string name="mascot_description">숙명여자대학교 마스코트 눈송이</string>
+
+    <!-- 시작 화면 -->
+    <string name="start_subtitle">눈송이가 관리해주는 숙명 AI 캘린더</string>
+    <string name="start_login">로그인</string>
+    <string name="start_signup">회원가입</string>
+
+    <!-- 로그인 -->
+    <string name="login_bubble">로그인 해줘! ❄️</string>
+    <string name="login_student_id">학번</string>
+    <string name="login_student_id_placeholder">학번 7자리</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_password_placeholder">비밀번호 입력</string>
+    <string name="login_auto">자동 로그인</string>
+    <string name="login_forgot_password">비밀번호를 잊으셨나요?</string>
+    <string name="login_forgot_password_soon">비밀번호 찾기는 준비 중이에요 💙</string>
+    <string name="login_button">로그인</string>
+    <string name="login_no_account">아직 계정이 없나요?</string>
+    <string name="login_go_signup">회원가입</string>
+
+    <!-- 인증 에러 -->
+    <string name="error_invalid_credentials">학번 또는 비밀번호가 맞지 않아요</string>
+    <string name="error_duplicate_email">이미 가입된 학교 이메일이에요</string>
+    <string name="error_duplicate_student_id">이미 가입된 학번이에요</string>
+    <string name="error_network">인터넷 연결을 확인해 주세요</string>
+    <string name="error_unknown">문제가 생겼어요. 잠시 후 다시 시도해 주세요</string>
+
+    <!-- 회원가입 공통 -->
+    <string name="signup_title">회원가입</string>
+    <string name="signup_next">다음</string>
+    <string name="signup_have_account">이미 계정이 있으신가요?</string>
+    <string name="signup_go_login">로그인하기</string>
+
+    <!-- 회원가입 1단계 -->
+    <string name="signup1_step">기본 정보 (1/2 단계)</string>
+    <string name="signup1_percent" formatted="false">50% 완료</string>
+    <string name="signup1_bubble_highlight">너에 대해 알려줘!</string>
+    <string name="signup1_bubble_rest">맞춤 일정을 짜줄게 ✨</string>
+    <string name="signup1_student_id">학번 (아이디)</string>
+    <string name="signup1_student_id_placeholder">예) 2316916</string>
+    <string name="signup1_check_duplicate">중복 확인</string>
+    <string name="signup1_student_id_help">학번은 로그인 아이디로 사용돼요</string>
+    <string name="signup1_student_id_available">사용할 수 있는 학번이에요</string>
+    <string name="signup1_student_id_invalid">학번 7자리를 숫자로 입력해 주세요</string>
+    <string name="signup1_student_id_need_check">학번 중복 확인을 해 주세요</string>
+    <string name="signup1_email">학교 이메일 (웹메일 인증)</string>
+    <string name="signup1_email_placeholder">예) snowflake@sookmyung.ac.kr</string>
+    <string name="signup1_email_request">인증요청</string>
+    <string name="signup1_email_resend">재요청</string>
+    <string name="signup1_email_done">인증완료</string>
+    <string name="signup1_email_help">숙명 웹메일(@sookmyung.ac.kr)로 인증번호가 발송돼요</string>
+    <string name="signup1_email_invalid">숙명 웹메일(@sookmyung.ac.kr) 주소를 입력해 주세요</string>
+    <string name="signup1_email_need_verify">학교 이메일 인증을 완료해 주세요</string>
+    <string name="signup1_email_code_placeholder">인증번호 6자리</string>
+    <string name="signup1_email_code_wrong">인증번호가 맞지 않아요. 다시 확인해 주세요</string>
+    <string name="signup1_email_code_expired">인증 시간이 지났어요. [재요청]을 눌러 주세요</string>
+    <string name="signup1_email_verified">이메일 인증이 완료됐어요</string>
+    <string name="signup1_name">이름</string>
+    <string name="signup1_name_placeholder">이름 입력</string>
+    <string name="signup1_name_error">이름을 입력해 주세요</string>
+    <string name="signup1_birth">생년월일</string>
+    <string name="signup1_birth_placeholder">YYYY.MM.DD</string>
+    <string name="signup1_birth_error">생년월일을 선택해 주세요</string>
+    <string name="signup1_birth_pick">생년월일 선택</string>
+    <string name="signup1_college">학부</string>
+    <string name="signup1_college_error">학부를 선택해 주세요</string>
+    <string name="signup1_major">학과/전공</string>
+    <string name="signup1_major_error">학과/전공을 선택해 주세요</string>
+    <string name="signup1_major_need_college">학부를 먼저 선택해 주세요</string>
+    <string name="signup1_password">비밀번호</string>
+    <string name="signup1_password_placeholder">영문, 숫자 포함 8자 이상</string>
+    <string name="signup1_password_error">영문과 숫자를 포함해 8자 이상 입력해 주세요</string>
+    <string name="signup1_password_confirm">비밀번호 확인</string>
+    <string name="signup1_password_confirm_placeholder">비밀번호 다시 입력</string>
+    <string name="signup1_password_confirm_error">비밀번호가 일치하지 않아요</string>
+    <string name="signup1_password_match">비밀번호가 일치해요</string>
+    <string name="signup1_agree">개인정보 수집 및 이용에 동의합니다</string>
+    <string name="signup1_agree_required">(필수)</string>
+    <string name="signup1_agree_view">보기</string>
+    <string name="signup1_agree_error">개인정보 수집 및 이용에 동의해 주세요</string>
+    <string name="signup1_privacy_title">개인정보 수집 및 이용 안내</string>
+    <string name="signup1_privacy_body">moim은 회원가입과 일정 관리를 위해 아래 정보를 수집해요.\n\n• 수집 항목: 학번, 학교 이메일, 이름, 생년월일, 학부, 학과/전공\n• 이용 목적: 로그인, 맞춤 일정 추천, 친구와 일정 조율\n• 보관 기간: 회원 탈퇴 시까지\n\n비밀번호는 암호화되어 인증 서버에서만 관리되고, moim은 비밀번호를 직접 저장하지 않아요.</string>
+
+    <!-- 회원가입 2단계 -->
+    <string name="signup2_step">일정 성향 (2/2 단계)</string>
+    <string name="signup2_percent" formatted="false">100% 완료</string>
+    <string name="signup2_bubble_start">평소에 일정을 어떻게 준비하는 편이야? </string>
+    <string name="signup2_bubble_highlight">너의 페이스</string>
+    <string name="signup2_bubble_end">에 맞춰 알려줄게! ✨</string>
+    <string name="signup2_style_title">나의 작업 &amp; 시험 스타일</string>
+    <string name="signup2_style_count">1개 선택</string>
+
+    <string name="planning_early">미리미리형</string>
+    <string name="planning_early_desc">시험, 과제는 일주일 전부터 미리 시작해요</string>
+    <string name="planning_early_desc_selected">시험, 과제를 일주일 전에 한 번 더 알려줘요.</string>
+    <string name="planning_early_banner">시험과 과제 마감 일주일 전 오전 9시에 눈송이가 꼼꼼하게 챙겨줄게요!</string>
+    <string name="planning_three_day">3일 집중형</string>
+    <string name="planning_three_day_desc">시험, 과제는 3일 전부터 충분해요</string>
+    <string name="planning_three_day_desc_selected">시험, 과제를 3일 전에 한 번 더 알려줘요.</string>
+    <string name="planning_three_day_banner">시험 및 과제 3일 전부터 스퍼트를 올릴 수 있도록 눈송이가 리마인드해줄게요!</string>
+    <string name="planning_cramming">벼락치기형</string>
+    <string name="planning_cramming_desc">시험, 과제는 하루면 충분해요</string>
+    <string name="planning_cramming_desc_selected">시험, 과제를 하루 전에 알려줘요.</string>
+    <string name="planning_cramming_banner_title">D-1 마감 직전 초집중 모드!</string>
+    <string name="planning_cramming_banner">시험 및 과제 하루 전 긴급 알림을 보내줄게요!</string>
+    <string name="planning_planner">계획형</string>
+    <string name="planning_planner_desc">도와주지 않아도 스스로 계획하고 관리할 수 있어요.</string>
+    <string name="planning_planner_desc_selected">시험, 과제 알림 일정을 직접 커스텀해요</string>
+    <string name="planning_planner_banner">🔔 시험, 과제 알림 일정을 커스텀해요</string>
+
+    <string name="signup2_custom_title">맞춤 알림 설정 (직접 선택)</string>
+    <string name="signup2_custom_hint">원하는 시점 탭</string>
+    <string name="signup2_custom_exam">시험</string>
+    <string name="signup2_custom_assignment">과제</string>
+    <string name="signup2_custom_appointment">기타 약속</string>
+    <string name="signup2_days_before">%1$d일 전</string>
+
+    <string name="signup2_visibility_title">내 일정 공개 범위</string>
+    <string name="visibility_public">전체 공개</string>
+    <string name="visibility_friends">친구 공개</string>
+    <string name="visibility_group">그룹 공개</string>
+    <string name="visibility_private">비공개</string>
+    <string name="signup2_visibility_note">비공개 일정은 친구에게 \"%1$s님의 일정입니다\"로만 상세 내용 없이 표시돼요.</string>
+    <string name="signup2_visibility_default_note">* 기본 설정값이며, 캘린더에서 일정 등록 시 개별 변경할 수 있어요</string>
+    <string name="signup2_profile_note">내 프로필에서 언제든지 수정할 수 있어요</string>
+    <string name="signup2_submit">moim 시작하기</string>
+    <string name="signup2_default_name">나</string>
+
+    <!-- 가입 완료 -->
+    <string name="done_school_chip">숙명여자대학교 moim</string>
+    <string name="done_welcome_bubble">환영합니다!</string>
+    <string name="done_department">%1$s · %2$s</string>
+    <string name="done_title">%1$s%2$s, 환영해! 🎉</string>
+    <string name="done_subtitle">이제 나한테 일정을 편하게 말해주기만 하면 돼.\n수업, 과제, 약속까지 깔끔하게 챙겨줄게! ❄️</string>
+    <string name="done_card_title">첫 일정 브리핑 준비 완료</string>
+    <string name="done_card_badge">실시간 동기화</string>
+    <string name="done_card_example_q">\"내일 2시 인공지능 수업 어디야?\"</string>
+    <string name="done_card_example_a">명신관 402호 강의실 확인부터 준비물까지 바로 답해줄게요.</string>
+    <string name="done_feature_timetable">시간표 업로드 가능</string>
+    <string name="done_feature_alarm">시험, 과제, 일정 알림</string>
+    <string name="done_start_chat">눈송이랑 대화 시작하기</string>
+    <string name="done_footnote">캘린더와 시간표는 언제든지 대화나 메뉴에서 확인할 수 있어요</string>
+
+    <!-- 화면 이름 (임시 화면 제목) -->
+    <string name="screen_profile">프로필 / 설정</string>
+
+    <!-- 메인 (눈송이 챗봇) -->
+    <string name="main_open_calendar">캘린더 열기</string>
+    <string name="main_open_dm">단체 DM 열기</string>
+    <string name="main_open_profile">프로필 열기</string>
+    <string name="main_bot_name">눈송이</string>
+    <string name="main_input_placeholder">눈송이에게 말하기...</string>
+    <string name="main_attach">시간표 캡처 올리기</string>
+    <string name="main_send">보내기</string>
+    <string name="main_typing">눈송이가 생각 중이야…</string>
+    <string name="main_coming_soon">곧 만들 기능이야 💙</string>
+    <string name="main_register_failed">등록하지 못했어요. 다시 시도해 주세요</string>
+
+    <!-- 일정 확인 카드 -->
+    <string name="card_register">등록하기</string>
+    <string name="card_edit">수정</string>
+    <string name="card_registered">캘린더에 등록했어</string>
+    <string name="card_dismissed">수정을 요청했어</string>
+    <string name="card_deadline_suffix">%1$s 마감</string>
+    <string name="schedule_type_exam">[시험]</string>
+    <string name="schedule_type_assignment">[과제]</string>
+    <string name="schedule_type_appointment">[약속]</string>
+    <string name="schedule_type_meetup">[모임]</string>
+    <string name="schedule_type_class">[수업]</string>
+
+    <!-- 캘린더 -->
+    <string name="schedule_type_etc">[기타]</string>
+    <string name="schedule_label_exam">시험</string>
+    <string name="schedule_label_assignment">과제</string>
+    <string name="schedule_label_appointment">약속</string>
+    <string name="schedule_label_meetup">모임</string>
+    <string name="schedule_label_class">수업</string>
+    <string name="schedule_label_etc">기타</string>
+    <string name="calendar_month_title">%1$d년 %2$d월</string>
+    <string name="calendar_prev_month">이전 달</string>
+    <string name="calendar_next_month">다음 달</string>
+    <string name="calendar_empty">이 날은 일정이 없어요.\n눈송이에게 말하거나 + 버튼으로 추가해 보세요!</string>
+    <string name="calendar_add">일정 추가</string>
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_me">나</string>
+    <string name="calendar_selected">선택됨</string>
+    <string name="calendar_add_friend">친구 추가</string>
+    <string name="calendar_settings">캘린더 설정</string>
+    <string name="calendar_total">총 %1$d개의 일정</string>
+    <string name="calendar_edit">수정</string>
+    <string name="calendar_edit_done">완료</string>
+    <string name="calendar_reminder">%1$d일 전 알림 (%2$s 시작)</string>
+    <string name="calendar_hidden_title">%1$s님의 일정입니다</string>
+    <string name="calendar_hidden_detail">비공개 일정이라 내용은 보이지 않아요</string>
+    <string name="calendar_friend_empty">%1$s님은 이 날 일정이 없어요</string>
+    <string name="calendar_delete">일정 삭제</string>
+    <string name="calendar_deleted">일정을 삭제했어요</string>
+    <string-array name="calendar_weekdays">
+        <item>일</item>
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+    </string-array>
+
+    <!-- 새 일정 등록 (바텀시트) -->
+    <string name="add_title">새 일정 등록</string>
+    <string name="add_close">닫기</string>
+    <string name="add_name_label">일정 이름</string>
+    <string name="add_name_placeholder">일정 제목을 입력하세요 (예: 알고리즘 팀플)</string>
+    <string name="add_name_error">일정 이름을 입력해 주세요</string>
+    <string name="add_type_label">일정 유형</string>
+    <string name="add_type_hint">캘린더 컬러 자동 적용</string>
+    <string name="add_when_where_label">일정 시간 및 장소</string>
+    <string name="add_datetime_label">날짜 &amp; 시간</string>
+    <string name="add_location_label">장소</string>
+    <string name="add_location_placeholder">장소 입력 (예: 순헌관 301호 / 명신관 라운지)</string>
+    <string name="add_reminder_label">알림 시점 선택</string>
+    <string name="add_reminder_hint">푸시 + 눈송이 챗봇 리마인드</string>
+    <string name="add_reminder_days">%1$d일 전</string>
+    <string name="add_visibility_label">내 일정 공개 범위</string>
+    <string name="add_visibility_info">비공개 일정은 친구에게 내용 없이 표시돼요</string>
+    <string name="add_save">일정 저장하기</string>
+    <string name="add_cancel_to_chat">취소하고 챗봇으로 돌아가기</string>
+    <string name="add_saved">캘린더에 저장했어요</string>
+    <string name="add_save_failed">저장하지 못했어요. 다시 시도해 주세요</string>
+    <string name="add_group_label">공개할 그룹 선택</string>
+    <string name="add_group_count">%1$d개 선택됨</string>
+    <string name="add_group_info">선택한 그룹의 멤버들에게만 일정이 공유돼요</string>
+    <string name="add_group_error">공개할 그룹을 하나 이상 골라 주세요</string>
+    <string name="add_group_empty">아직 참여 중인 단체 채팅방이 없어요</string>
+
+    <!-- 채팅방 목록 -->
+    <string name="dm_list_title">Chat List</string>
+    <string name="dm_add_friend">친구 추가</string>
+    <string name="dm_new_chat">새 채팅</string>
+    <string name="dm_network">눈송이 캠퍼스 네트워크</string>
+    <string name="dm_active_votes">진행 중인 모임 투표 %1$d건</string>
+    <string name="dm_search_placeholder">친구, 채팅방 검색</string>
+    <string name="dm_filter_all">전체</string>
+    <string name="dm_filter_direct">1:1</string>
+    <string name="dm_filter_group">단체</string>
+    <string name="dm_filter_unread">안읽음</string>
+    <string name="dm_vote_badge">모임 투표중</string>
+    <string name="dm_bot_badge">비서</string>
+    <string name="dm_sender_prefix">%1$s: </string>
+    <string name="dm_yesterday">어제</string>
+    <string name="dm_empty">채팅방이 없어요</string>
+
+    <!-- 채팅방 -->
+    <string name="room_member_count">%1$d명</string>
+    <string name="room_meetup_button">모임</string>
+    <string name="room_input_placeholder">메시지 입력...</string>
+    <string name="room_emoji">이모티콘</string>
+    <string name="room_attach">파일 보내기</string>
+    <string name="room_bot_badge">AI 일정 비서</string>
+    <string name="room_suggest_title">눈송이 추천 모임 시간</string>
+    <string name="room_suggest_synced">%1$d명 캘린더 연동 완료</string>
+    <string name="room_suggest_loading">일정을 비교하는 중…</string>
+    <string name="room_suggest_empty">2주 안에 맞는 시간이 없어요 😢</string>
+    <string name="room_available_count">%1$d명 가능</string>
+    <string name="room_make_vote">투표 생성하기</string>
+    <string name="room_view_calendar">캘린더로 보기</string>
+
+    <!-- 모임 일정 잡기 -->
+    <string name="meetup_title">모임 일정 잡기</string>
+    <string name="meetup_subtitle">%1$s · %2$d명</string>
+    <string name="meetup_synced">%1$d명 일정 동기화 완료</string>
+    <string name="meetup_legend_all">전원 가능</string>
+    <string name="meetup_legend_some">일부 가능</string>
+    <string name="meetup_legend_none">시간 겹침</string>
+    <string name="meetup_legend_unknown">미입력</string>
+    <string name="meetup_selected">선택: %1$s</string>
+    <string name="meetup_selected_all">%1$d명 모두 조율 가능!</string>
+    <string name="meetup_selected_some">최대 %1$d명 가능</string>
+    <string name="meetup_selected_none">맞는 시간이 없어요</string>
+    <string name="meetup_timeline_title">%1$s 멤버별 타임라인</string>
+    <string name="meetup_timeline_sub">오전 9시 ~ 오후 10시 전체 현황</string>
+    <string name="meetup_common_free">전원 가능 시간대: %1$s</string>
+    <string name="meetup_common_hours">%1$s 확보</string>
+    <string name="meetup_no_common">전원이 같이 비는 시간이 없어요</string>
+    <string name="meetup_free">가능</string>
+    <string name="meetup_private">비공개</string>
+    <string name="meetup_ai_label">SNOW AI · 스마트 스케줄러</string>
+    <string name="meetup_ai_title">AI 눈송이의 추천 ❄️ 이 시간 어때? 💙</string>
+    <string name="meetup_best">최고 추천</string>
+    <string name="meetup_everyone">%1$d명 전원 ✨</string>
+    <string name="meetup_partial">%1$d명 가능 · %2$d명 조율</string>
+    <string name="meetup_confirm">이 시간으로 모임 만들기</string>
+    <string name="meetup_confirm_note">선택한 시간이 내 캘린더에 등록되고 채팅방에 안내돼요</string>
+    <string name="meetup_confirm_failed">모임을 만들지 못했어요. 다시 시도해 주세요</string>
+    <string name="meetup_hours">%1$d시간</string>
+    <string name="meetup_hours_minutes">%1$d시간 %2$d분</string>
+    <string name="meetup_minutes">%1$d분</string>
+    <string name="meetup_duration_title">희망 소요시간</string>
+    <string name="meetup_duration_max">4시간+</string>
+    <string name="meetup_duration_recommended">%1$s (추천)</string>
+    <string name="meetup_duration_use_recommended">추천 %1$s로 맞추기</string>
+    <string name="meetup_duration_note">이 시간보다 짧게 비는 후보는 추천에서 빠져요</string>
+
+    <!-- S-12 친구 추가 -->
+    <string name="friend_title">Add Friend</string>
+    <string name="friend_banner_title">숙명인 연결 네트워크</string>
+    <string name="friend_banner_body">학번으로 숙명인을 검색하거나\n받은 친구 요청을 간편하게 확인하세요!</string>
+    <string name="friend_my_card">내 프로필 카드</string>
+    <string name="friend_my_card_value">%1$s · %2$s (%3$s)</string>
+    <string name="friend_my_student_id">내 학번</string>
+    <string name="friend_copy_id">학번 복사</string>
+    <string name="friend_copied">학번을 복사했어요. 친구에게 보내 줘 💙</string>
+    <string name="friend_qr">QR 코드</string>
+    <string name="friend_qr_soon">QR·초대 링크는 다음 버전에서 만나요 💙</string>
+    <string name="friend_search_title">학번으로 친구 찾기</string>
+    <string name="friend_search_placeholder">친구 학번 7자리</string>
+    <string name="friend_search">검색</string>
+    <string name="friend_invalid_id">학번 7자리를 숫자로 입력해 주세요</string>
+    <string name="friend_result_count">검색 결과 %1$d건</string>
+    <string name="friend_result_match">일치하는 재학생</string>
+    <string name="friend_result_empty">일치하는 숙명인이 없어요. 학번을 다시 확인해 줘!</string>
+    <string name="friend_major_year">%1$s · %2$s학번</string>
+    <string name="friend_verified">재학 인증</string>
+    <string name="friend_common_rooms">공통 모임 %1$d개 : %2$s</string>
+    <string name="friend_request">친구 요청</string>
+    <string name="friend_requested">요청됨</string>
+    <string name="friend_already">이미 친구</string>
+    <string name="friend_incoming">받은 요청 확인</string>
+    <string name="friend_me">나</string>
+    <string name="friend_request_sent">친구 요청을 보냈어요</string>
+    <string name="friend_requests_title">받은 친구 요청</string>
+    <string name="friend_requests_sub">나에게 친구 요청을 보낸 눈송이들이에요.</string>
+    <string name="friend_requests_empty">아직 받은 친구 요청이 없어요</string>
+    <string name="friend_view_all">전체보기</string>
+    <string name="friend_fold">접기</string>
+    <string name="friend_accept">수락</string>
+    <string name="friend_decline">거절</string>
+    <string name="friend_accepted">친구가 됐어요! 캘린더에서 친구 일정을 볼 수 있어요 💙</string>
+    <string name="friend_declined">요청을 거절했어요</string>
+    <string name="friend_request_message">\"%1$s\"</string>
+    <string name="friend_request_via">모임 \'%1$s\'에서 공유된 프로필</string>
+    <string name="friend_just_now">방금</string>
+    <string name="friend_hours_ago">%1$d시간 전</string>
+    <string name="friend_yesterday">어제</string>
+    <string name="friend_days_ago">%1$d일 전</string>
+
+    <!-- S-11 프로필 수정 -->
+    <string name="profile_title">Edit Profile</string>
+    <string name="profile_photo_change">프로필 사진 변경</string>
+    <string name="profile_photo_soon">프로필 사진 변경은 다음 버전에서 만나요 💙</string>
+    <string name="profile_enrolled">재학</string>
+    <string name="profile_basic_title">기본 정보</string>
+    <string name="profile_school">숙명여자대학교</string>
+    <string name="profile_student_id">학번</string>
+    <string name="profile_email">학교 이메일</string>
+    <string name="profile_email_none">인증된 메일 없음</string>
+    <string name="profile_locked">수정 불가</string>
+    <string name="profile_planning_title">내 일정 관리 성향</string>
+    <string name="profile_planning_sub">AI 눈송이가 알림 주기에 맞춰 반영해요</string>
+    <string name="profile_reminder_title">맞춤 알림 설정</string>
+    <string name="profile_reminder_sub">일정 유형별로 눈송이가 미리 리마인드해드려요.</string>
+    <string name="profile_reminder_appointment">약속</string>
+    <string name="reminder_same_day">당일</string>
+    <string name="profile_visibility_title">공개 범위 (기본 설정)</string>
+    <string name="profile_visibility_sub">새 일정을 등록할 때 기본으로 적용되는 공개 범위예요.</string>
+    <string name="profile_visibility_default_note">캘린더에서 각 일정을 등록하거나 수정할 때 개별 변경할 수 있어요.</string>
+    <string name="profile_visibility_group_note">캘린더에서 각 일정을 등록하거나 수정할 때 공개할 그룹을 고를 수 있어요.</string>
+    <string name="profile_save">저장하기</string>
+    <string name="profile_saved">프로필을 저장했어요 💙</string>
+    <string name="profile_logout">로그아웃</string>
+    <string name="profile_logout_title">로그아웃할까요?</string>
+    <string name="profile_logout_body">자동 로그인 정보가 지워지고 시작 화면으로 돌아가요.</string>
+
+    <!-- 일정 알림 -->
+    <string name="reminder_channel_name">일정 알림</string>
+    <string name="reminder_channel_description">시험·과제·약속 전에 눈송이가 보내는 알림</string>
+    <string name="reminder_notification_title">눈송이 ❄️</string>
+    <string name="reminder_permission_denied">알림 권한이 꺼져 있어서 일정 알림을 못 보내요. 설정에서 켤 수 있어요.</string>
+</resources>

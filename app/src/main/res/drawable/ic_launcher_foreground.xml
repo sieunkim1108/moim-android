@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 런처 아이콘 전경: 눈송이 이미지에 여백을 줘서 원형 마스크 안에 들어가게 함 -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/img_nunsongi"
+    android:inset="24%" />
