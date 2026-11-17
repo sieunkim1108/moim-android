@@ -1,0 +1,17 @@
+# 빌드 결과물
+*.iml
+.gradle/
+build/
+/captures
+.externalNativeBuild/
+.cxx/
+# IDE
+.idea/
+.DS_Store
+# 비밀 정보 (절대 커밋 금지)
+local.properties
+.env
+*.env
+google-services.json
+*.jks
+*.keystore
