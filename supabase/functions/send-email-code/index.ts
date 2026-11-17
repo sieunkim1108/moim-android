@@ -1,6 +1,6 @@
 // 학교 웹메일로 6자리 인증번호를 보낸다 (회원가입 S-03)
-// 필요한 환경변수: RESEND_API_KEY, EMAIL_FROM (예: "moim <no-reply@도메인>"), EMAIL_CODE_PEPPER
-import { admin, CODE_VALID_SECONDS, hashCode, json, SCHOOL_EMAIL } from "../_shared/email.ts";
+// 필요한 환경변수: GMAIL_USER, GMAIL_APP_PASSWORD, EMAIL_CODE_PEPPER (Resend를 쓰면 RESEND_API_KEY, EMAIL_FROM)
+import { admin, CODE_VALID_SECONDS, hashCode, json, SCHOOL_EMAIL, sendMail } from "../_shared/email.ts";
 
 const RESEND_INTERVAL_SECONDS = 30; // 너무 자주 재발송하지 못하게
 
@@ -33,16 +33,11 @@ Deno.serve(async (req) => {
   });
   if (error) return json({ error: "db" }, 500);
 
-  const sent = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: Deno.env.get("EMAIL_FROM"),
-      to: email,
-      subject: "[moim] 학교 메일 인증번호",
-      text: `moim 인증번호는 ${code} 입니다.\n3분 안에 앱에 입력해 주세요.`,
-    }),
-  });
-  if (!sent.ok) return json({ error: "mail" }, 502);
+  const sent = await sendMail(
+    email,
+    "[SnowChat] 학교 메일 인증번호",
+    `SnowChat 인증번호는 ${code} 입니다.\n3분 안에 앱에 입력해 주세요.\n\n본인이 요청하지 않았다면 이 메일은 무시해 주세요.`,
+  );
+  if (!sent) return json({ error: "mail" }, 502);
   return json({ ok: true });
 });
