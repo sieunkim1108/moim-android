@@ -129,12 +129,14 @@ fun MoimTopBarTitle(text: String) {
  * 하위 화면 상단바: [←] 제목 ... (추가 아이콘) [프로필 동그라미]
  * 친구 추가(S-12), 프로필 수정(S-11)처럼 메인에서 한 단계 들어간 화면에 쓴다.
  */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoimBackTopBar(
     title: String,
     onBack: () -> Unit,
     onProfileClick: (() -> Unit)?,
+    onDmClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     actions: @Composable () -> Unit = {},
 ) {
@@ -142,24 +144,52 @@ fun MoimBackTopBar(
         modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back), tint = Navy)
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.common_back),
+                    tint = Navy
+                )
             }
         },
-        title = { MoimTopBarTitle(title) },
+        title = {
+            MoimTopBarTitle(title)
+        },
         actions = {
             actions()
+
+            // DM 아이콘
+            if (onDmClick != null) {
+                IconButton(onClick = onDmClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.Forum,
+                        contentDescription = stringResource(R.string.main_open_dm),
+                        tint = Navy
+                    )
+                }
+            }
+
+            // 프로필 아이콘
             if (onProfileClick != null) {
                 IconButton(
                     onClick = onProfileClick,
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = Navy, contentColor = White),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Navy,
+                        contentColor = White
+                    ),
                 ) {
-                    Icon(Icons.Outlined.Person, contentDescription = stringResource(R.string.main_open_profile))
+                    Icon(
+                        Icons.Outlined.Person,
+                        contentDescription = stringResource(R.string.main_open_profile)
+                    )
                 }
             }
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Surface),
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = Surface
+        ),
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable

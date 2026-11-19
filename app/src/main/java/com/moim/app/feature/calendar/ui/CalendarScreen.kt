@@ -65,6 +65,7 @@ import com.moim.app.feature.calendar.ui.component.ProfileFilterRow
 import com.moim.app.feature.calendar.ui.component.ScheduleDayCard
 import com.moim.app.feature.calendar.ui.component.ScheduleLegend
 import com.moim.app.ui.component.MoimAppTopBar
+import com.moim.app.ui.component.MoimBackTopBar
 import com.moim.app.ui.component.MoimTopBarTitle
 import com.moim.app.ui.theme.MoimDimens
 import com.moim.app.ui.theme.MoimTheme
@@ -178,9 +179,9 @@ fun CalendarScreen(
         containerColor = Surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            MoimAppTopBar(
-                title = { MoimTopBarTitle(stringResource(R.string.calendar_title)) },
-                onCalendarClick = null, // 지금 화면
+            MoimBackTopBar(
+                title = stringResource(R.string.calendar_title),
+                onBack = onBack,
                 onDmClick = onDmClick,
                 onProfileClick = onProfileClick,
             )
@@ -285,10 +286,7 @@ private fun MonthBar(
             .padding(horizontal = MoimDimens.ScreenPadding, vertical = MoimDimens.SpaceSm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircleIconButton(onClick = onBack) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back), tint = Navy)
-        }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(3f))
         Row(
             modifier = Modifier
                 .shadow(4.dp, CircleShape, ambientColor = ShadowNavy, spotColor = ShadowNavy)
