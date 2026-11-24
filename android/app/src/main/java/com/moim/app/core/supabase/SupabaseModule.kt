@@ -19,11 +19,11 @@ object SupabaseConfig {
         get() = BuildConfig.SUPABASE_URL.isNotBlank() && BuildConfig.SUPABASE_ANON_KEY.isNotBlank()
 
     /**
-     * 학교 메일 인증을 켤지. 지금은 꺼 둔다 (메일 발송용 Resend 키 준비 전).
+     * 학교 메일 인증을 켤지. Gmail(moimnunsong) 발송으로 켰다 (2026-11-19).
      * false면 [인증요청]은 메일을 보내지 않고, 인증번호는 아무 6자리 숫자나 통과한다.
      * 다시 켤 때: true로 바꾸고, DB의 handle_new_user에 인증 검사도 되살린다.
      */
-    const val EMAIL_VERIFICATION_ENABLED = false
+    const val EMAIL_VERIFICATION_ENABLED = true
 
     /** Supabase Auth는 이메일로 로그인하므로 학번을 가상 이메일로 바꿔 쓴다 (실제 메일은 안 감) */
     fun loginEmail(studentId: String) = "$studentId@moim.app"
