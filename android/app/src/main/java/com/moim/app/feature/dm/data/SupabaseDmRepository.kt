@@ -1,5 +1,6 @@
 package com.moim.app.feature.dm.data
 
+import com.moim.app.core.model.Friend
 import com.moim.app.core.supabase.fromDbTime
 import com.moim.app.core.supabase.toDbTime
 import com.moim.app.feature.dm.domain.DmRepository
@@ -135,6 +136,22 @@ class SupabaseDmRepository @Inject constructor(
         }
     }
 
+    /**
+     * 단체방 만들기.
+     * 1) chat_rooms에 방을 만들고(만든 사람 = 나) id를 받는다
+     * 2) room_members에 나와 친구들을 넣는다 (RLS: 방장만, 그리고 친구만 초대 가능)
+     */
+    override suspend fun createGroupRoom(name: String, friends: List<Friend>): Result<String> = runCatching {
+        val me = myId ?: error("로그인이 필요해요")
+        val room = supabase.from("chat_rooms")
+            .insert(RoomInsert(name = name, isGroup = true, createdBy = me)) { select() }
+            .decodeSingle<RoomIdRow>()
+        val memberIds = (listOf(me) + friends.map { it.id }).distinct()
+        supabase.from("room_members").insert(memberIds.map { RoomMemberInsert(roomId = room.id, userId = it) })
+        refreshRooms()
+        room.id
+    }
+
     private suspend fun refreshRooms() {
         runCatching { supabase.postgrest.rpc("my_rooms").decodeList<RoomRow>() }
             .onSuccess { rows -> rooms.value = rows.map { it.toModel(myId) } }
@@ -222,4 +239,20 @@ private data class MessageInsert(
     @SerialName("room_id") val roomId: String,
     @SerialName("sender_id") val senderId: String,
     val content: String,
+)
+
+@Serializable
+private data class RoomInsert(
+    val name: String,
+    @SerialName("is_group") val isGroup: Boolean,
+    @SerialName("created_by") val createdBy: String,
+)
+
+@Serializable
+private data class RoomIdRow(val id: String)
+
+@Serializable
+private data class RoomMemberInsert(
+    @SerialName("room_id") val roomId: String,
+    @SerialName("user_id") val userId: String,
 )

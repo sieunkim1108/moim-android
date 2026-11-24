@@ -33,6 +33,14 @@ class FakeScheduleRepository @Inject constructor() : ScheduleRepository {
         return Result.success(Unit)
     }
 
+    override suspend fun updateSchedule(schedule: Schedule): Result<Unit> {
+        if (schedules.value.none { it.id == schedule.id }) {
+            return Result.failure(NoSuchElementException("schedule ${schedule.id} not found"))
+        }
+        schedules.update { list -> list.map { if (it.id == schedule.id) schedule else it } }
+        return Result.success(Unit)
+    }
+
     override suspend fun deleteSchedule(id: String): Result<Unit> {
         schedules.update { list -> list.filterNot { it.id == id } }
         return Result.success(Unit)

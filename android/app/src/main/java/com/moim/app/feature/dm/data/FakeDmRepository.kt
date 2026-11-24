@@ -1,5 +1,6 @@
 package com.moim.app.feature.dm.data
 
+import com.moim.app.core.model.Friend
 import com.moim.app.feature.auth.domain.repository.AuthRepository
 import com.moim.app.feature.dm.domain.DmRepository
 import com.moim.app.feature.dm.domain.model.ChatRoom
@@ -84,6 +85,20 @@ class FakeDmRepository @Inject constructor(
 
     override suspend fun markRead(roomId: String) {
         rooms.update { list -> list.map { if (it.id == roomId) it.copy(unreadCount = 0) else it } }
+    }
+
+    override suspend fun createGroupRoom(name: String, friends: List<Friend>): Result<String> {
+        val id = UUID.randomUUID().toString()
+        val room = ChatRoom(
+            id = id,
+            type = RoomType.GROUP,
+            title = name,
+            members = listOf(me) + friends.map { RoomMember(it.id, it.name) },
+            lastMessage = "",
+            lastAt = LocalDateTime.now(clock),
+        )
+        rooms.update { it + room }
+        return Result.success(id)
     }
 
     private fun append(roomId: String, newMessages: List<RoomMessage>) {

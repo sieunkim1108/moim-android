@@ -1,5 +1,8 @@
 package com.moim.app.feature.dm.domain.usecase
 
+import com.moim.app.core.data.FriendRepository
+import com.moim.app.core.model.Friend
+import com.moim.app.core.model.givenName
 import com.moim.app.feature.dm.domain.DmRepository
 import com.moim.app.feature.dm.domain.model.ChatRoom
 import com.moim.app.feature.dm.domain.model.RoomMessage
@@ -53,5 +56,33 @@ class SendRoomMessageUseCase @Inject constructor(
         private val MEETUP_WORDS = listOf("언제", "놀자", "모임", "만나", "회의", "시간 돼", "시간돼")
 
         fun isMeetupTalk(text: String): Boolean = MEETUP_WORDS.any { it in text }
+    }
+}
+
+/** 단체방에 초대할 수 있는 사람 = 내 친구 (RLS도 친구만 초대 가능) */
+class ObserveInvitableFriendsUseCase @Inject constructor(private val friendRepository: FriendRepository) {
+    operator fun invoke(): Flow<List<Friend>> = friendRepository.observeFriends()
+}
+
+/**
+ * 단체 채팅방 만들기.
+ * - 친구를 한 명 이상 골라야 한다
+ * - 방 이름을 비워 두면 친구 이름으로 자동으로 짓는다 (예: "시은, 지원")
+ */
+class CreateGroupRoomUseCase @Inject constructor(private val repository: DmRepository) {
+    suspend operator fun invoke(name: String, friends: List<Friend>): Result<String> {
+        val invitees = friends.distinctBy { it.id }
+        if (invitees.isEmpty()) return Result.failure(IllegalArgumentException("no friends selected"))
+        val title = name.trim().ifEmpty { defaultName(invitees) }.take(MAX_NAME_LENGTH)
+        return repository.createGroupRoom(title, invitees)
+    }
+
+    companion object {
+        const val MAX_NAME_LENGTH = 30
+
+        fun defaultName(friends: List<Friend>): String {
+            val joined = friends.joinToString(", ") { it.givenName }
+            return if (joined.length <= MAX_NAME_LENGTH) joined else joined.take(MAX_NAME_LENGTH - 1) + "…"
+        }
     }
 }

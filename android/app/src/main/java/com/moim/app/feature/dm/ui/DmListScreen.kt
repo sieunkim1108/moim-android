@@ -39,7 +39,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,7 +67,6 @@ import com.moim.app.ui.theme.Surface
 import com.moim.app.ui.theme.TextPrimary
 import com.moim.app.ui.theme.TextSecondary
 import com.moim.app.ui.theme.White
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -78,6 +76,7 @@ fun DmListRoute(
     onRoomClick: (ChatRoom) -> Unit,
     onProfileClick: () -> Unit,
     onAddFriendClick: () -> Unit,
+    onNewChatClick: () -> Unit = {},
     viewModel: DmListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -87,6 +86,7 @@ fun DmListRoute(
         onRoomClick = onRoomClick,
         onProfileClick = onProfileClick,
         onAddFriendClick = onAddFriendClick,
+        onNewChatClick = onNewChatClick,
         onQueryChange = viewModel::onQueryChange,
         onFilterSelect = viewModel::onFilterSelect,
         onToggleUnread = viewModel::onToggleUnread,
@@ -108,11 +108,9 @@ fun DmListScreen(
     onToggleUnread: () -> Unit,
     modifier: Modifier = Modifier,
     onAddFriendClick: () -> Unit = {},
+    onNewChatClick: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val comingSoon = stringResource(R.string.main_coming_soon)
-    val showComingSoon: () -> Unit = { scope.launch { snackbarHostState.showSnackbar(comingSoon) } }
 
     Scaffold(
         modifier = modifier,
@@ -137,7 +135,7 @@ fun DmListScreen(
                     IconButton(onClick = onAddFriendClick) {
                         Icon(Icons.Outlined.PersonAdd, contentDescription = stringResource(R.string.dm_add_friend), tint = Navy)
                     }
-                    IconButton(onClick = showComingSoon) { // TODO: 새 채팅 만들기
+                    IconButton(onClick = onNewChatClick) { // 새 단체 채팅방 만들기
                         Icon(Icons.Outlined.EditNote, contentDescription = stringResource(R.string.dm_new_chat), tint = Navy)
                     }
                     IconButton(
@@ -151,7 +149,7 @@ fun DmListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = showComingSoon, containerColor = Navy, contentColor = White, shape = CircleShape) {
+            FloatingActionButton(onClick = onNewChatClick, containerColor = Navy, contentColor = White, shape = CircleShape) {
                 Icon(Icons.Outlined.PostAdd, contentDescription = stringResource(R.string.dm_new_chat))
             }
         },
