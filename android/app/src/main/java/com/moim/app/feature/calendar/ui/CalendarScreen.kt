@@ -85,15 +85,18 @@ private val DayTitleFormat = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale
 
 /** 캘린더 진입점 */
 @Composable
+//ViewModel 과 화면을 연결
 fun CalendarRoute(
     onBack: () -> Unit,
     onBackToChat: () -> Unit,
     onDmClick: () -> Unit,
     onProfileClick: () -> Unit,
     onAddFriendClick: () -> Unit,
+    //Hit 를 이용해서 CalenderViewModel 객체를 가져오는 코드
     viewModel: CalendarViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    //캘린더 전체 화면 구성
     CalendarScreen(
         uiState = uiState,
         onBack = onBack,
@@ -107,6 +110,7 @@ fun CalendarRoute(
         onToggleEditMode = viewModel::onToggleEditMode,
         onAddClick = viewModel::onAddClick,
         onDeleteSchedule = viewModel::onDeleteSchedule,
+        onEditSchedule = viewModel::onEditSchedule,
         onMessageShown = viewModel::onMessageShown,
         addActions = AddScheduleActions(
             onTitleChange = viewModel::onTitleChange,
@@ -149,6 +153,7 @@ fun CalendarScreen(
     addActions: AddScheduleActions,
     modifier: Modifier = Modifier,
     onAddFriendClick: () -> Unit = {},
+    onEditSchedule: (Schedule) -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -159,6 +164,7 @@ fun CalendarScreen(
         stringResource(
             when (it) {
                 CalendarMessage.SAVED -> R.string.add_saved
+                CalendarMessage.UPDATED -> R.string.calendar_updated
                 CalendarMessage.SAVE_FAILED -> R.string.add_save_failed
                 CalendarMessage.DELETED -> R.string.calendar_deleted
             },
@@ -250,6 +256,7 @@ fun CalendarScreen(
                         schedule = schedule,
                         showDelete = uiState.isMyCalendar && uiState.isEditMode,
                         onDelete = { onDeleteSchedule(schedule.id) },
+                        onEdit = { onEditSchedule(schedule) },
                         hiddenOwnerName = hiddenOwner,
                         modifier = Modifier.padding(horizontal = MoimDimens.ScreenPadding),
                     )
@@ -258,7 +265,7 @@ fun CalendarScreen(
         }
     }
 
-    // 새 일정 등록 바텀시트
+    // 새 일정 등록·수정 바텀시트
     if (uiState.form != null) {
         ModalBottomSheet(
             onDismissRequest = addActions.onClose,

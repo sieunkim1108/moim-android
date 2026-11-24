@@ -14,6 +14,7 @@ import com.moim.app.feature.calendar.domain.usecase.NewSchedule
 import com.moim.app.feature.calendar.domain.usecase.ObserveFriendsUseCase
 import com.moim.app.feature.calendar.domain.usecase.ObserveSchedulesByDateUseCase
 import com.moim.app.feature.calendar.domain.usecase.ObserveShareGroupsUseCase
+import com.moim.app.feature.calendar.domain.usecase.UpdateScheduleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +33,9 @@ import java.time.LocalTime
 import java.time.YearMonth
 import javax.inject.Inject
 
-/** 새 일정 등록 바텀시트 입력값 */
+/** 일정 등록·수정 바텀시트 입력값 */
 data class AddScheduleForm(
+    val editing: Schedule? = null, // null이면 새 일정, 있으면 이 일정을 수정
     val title: String = "",
     val type: ScheduleType = ScheduleType.APPOINTMENT,
     val date: LocalDate,
@@ -45,7 +47,9 @@ data class AddScheduleForm(
     val showTitleError: Boolean = false,
     val showGroupError: Boolean = false,
     val isSaving: Boolean = false,
-)
+) {
+    val isEditing: Boolean get() = editing != null
+}
 
 /** 캘린더 화면 상태 */
 data class CalendarUiState(
@@ -67,7 +71,7 @@ data class CalendarUiState(
 }
 
 /** 화면 아래 잠깐 뜨는 안내 */
-enum class CalendarMessage { SAVED, SAVE_FAILED, DELETED }
+enum class CalendarMessage { SAVED, UPDATED, SAVE_FAILED, DELETED }
 
 /** 화면 쪽에서만 바뀌는 상태 (일정 목록 제외) */
 private data class LocalState(
@@ -87,6 +91,7 @@ class CalendarViewModel @Inject constructor(
     observeShareGroups: ObserveShareGroupsUseCase,
     private val addSchedule: AddScheduleUseCase,
     private val deleteSchedule: DeleteScheduleUseCase,
+    private val updateSchedule: UpdateScheduleUseCase,
     clock: Clock,
 ) : ViewModel() {
 
@@ -138,7 +143,7 @@ class CalendarViewModel @Inject constructor(
     /** 프로필 줄: null = 나, 아니면 친구 id. 친구 캘린더는 보기만 가능 */
     fun onOwnerSelect(friendId: String?) = local.update { it.copy(selectedFriendId = friendId, isEditMode = false) }
 
-    /** [수정] ↔ [완료]: 수정 모드에서는 카드마다 삭제 버튼이 보인다 */
+    /** [수정] ↔ [완료]: 수정 모드에서는 카드마다 연필(수정)·휴지통(삭제) 버튼이 보인다 */
     fun onToggleEditMode() = local.update { it.copy(isEditMode = !it.isEditMode) }
 
     fun onPrevMonth() = moveMonth(-1)
@@ -169,6 +174,26 @@ class CalendarViewModel @Inject constructor(
             form = AddScheduleForm(
                 date = it.selectedDate,
                 visibility = currentUser.value?.defaultVisibility ?: Visibility.FRIENDS,
+            ),
+        )
+    }
+
+    // ---------- 일정 수정 ----------
+
+    /** 수정 모드에서 카드의 연필 버튼: 기존 값이 채워진 바텀시트를 연다 */
+    fun onEditSchedule(schedule: Schedule) = local.update {
+        if (it.selectedFriendId != null) return@update it // 친구 일정은 수정 불가
+        it.copy(
+            form = AddScheduleForm(
+                editing = schedule,
+                title = schedule.title,
+                type = schedule.type,
+                date = schedule.startAt.toLocalDate(),
+                time = schedule.startAt.toLocalTime(),
+                location = schedule.location.orEmpty(),
+                reminderDays = schedule.reminderDaysBefore.toSet(),
+                visibility = schedule.visibility,
+                sharedRoomIds = schedule.sharedRoomIds,
             ),
         )
     }
@@ -210,25 +235,26 @@ class CalendarViewModel @Inject constructor(
             return
         }
         updateForm { it.copy(isSaving = true) }
+        val input = NewSchedule(
+            title = form.title,
+            type = form.type,
+            startAt = form.date.atTime(form.time),
+            location = form.location,
+            reminderDaysBefore = form.reminderDays.toList(),
+            visibility = form.visibility,
+            sharedRoomIds = form.sharedRoomIds,
+        )
         viewModelScope.launch {
-            addSchedule(
-                NewSchedule(
-                    title = form.title,
-                    type = form.type,
-                    startAt = form.date.atTime(form.time),
-                    location = form.location,
-                    reminderDaysBefore = form.reminderDays.toList(),
-                    visibility = form.visibility,
-                    sharedRoomIds = form.sharedRoomIds,
-                ),
-            ).onSuccess {
+            val result = form.editing?.let { updateSchedule(it, input) } ?: addSchedule(input)
+            result.onSuccess {
                 // 저장한 날짜로 이동해서 바로 보이게
                 local.update {
                     it.copy(
                         form = null,
+                        isEditMode = false,
                         selectedDate = form.date,
                         visibleMonth = YearMonth.from(form.date),
-                        message = CalendarMessage.SAVED,
+                        message = if (form.isEditing) CalendarMessage.UPDATED else CalendarMessage.SAVED,
                     )
                 }
             }.onFailure {

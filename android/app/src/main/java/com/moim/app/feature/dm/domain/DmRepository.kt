@@ -1,5 +1,6 @@
 package com.moim.app.feature.dm.domain
 
+import com.moim.app.core.model.Friend
 import com.moim.app.feature.dm.domain.model.ChatRoom
 import com.moim.app.feature.dm.domain.model.RoomMessage
 import kotlinx.coroutines.flow.Flow
@@ -21,4 +22,10 @@ interface DmRepository {
     suspend fun postBotMessages(roomId: String, messages: List<RoomMessage>): Result<Unit>
 
     suspend fun markRead(roomId: String)
+
+    /**
+     * 단체 채팅방을 만든다. 나는 자동으로 들어가고 friends를 초대한다.
+     * 성공하면 새 방 id를 돌려준다.
+     */
+    suspend fun createGroupRoom(name: String, friends: List<Friend>): Result<String>
 }

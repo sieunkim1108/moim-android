@@ -22,6 +22,7 @@ import com.moim.app.feature.chat.ui.MainRoute
 import com.moim.app.feature.dm.domain.model.RoomType
 import com.moim.app.feature.dm.ui.DmListRoute
 import com.moim.app.feature.dm.ui.DmRoomRoute
+import com.moim.app.feature.dm.ui.NewGroupRoomRoute
 import com.moim.app.feature.friend.ui.AddFriendRoute
 import com.moim.app.feature.meetup.ui.MeetupRoute
 import com.moim.app.feature.profile.ui.ProfileRoute
@@ -130,6 +131,20 @@ fun MoimNavHost(
                     }
                 },
                 onProfileClick = { navController.navigate(MoimRoute.Profile) },
+                onAddFriendClick = { navController.navigate(MoimRoute.AddFriend) },
+                onNewChatClick = { navController.navigate(MoimRoute.NewGroupRoom) },
+            )
+        }
+
+        composable<MoimRoute.NewGroupRoom> {
+            NewGroupRoomRoute(
+                onBack = { navController.popBackStack() },
+                // 만든 방으로 들어가고, 뒤로 가면 만들기 화면이 아니라 채팅 목록으로
+                onCreated = { roomId ->
+                    navController.navigate(MoimRoute.DmRoom(roomId)) {
+                        popUpTo<MoimRoute.NewGroupRoom> { inclusive = true }
+                    }
+                },
                 onAddFriendClick = { navController.navigate(MoimRoute.AddFriend) },
             )
         }

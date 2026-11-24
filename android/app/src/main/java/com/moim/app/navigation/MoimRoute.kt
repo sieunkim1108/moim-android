@@ -27,5 +27,6 @@ sealed interface MoimRoute {
 
     // 단체 DM / 모임
     @Serializable data class DmRoom(val roomId: String) : MoimRoute
+    @Serializable data object NewGroupRoom : MoimRoute
     @Serializable data class Meetup(val roomId: String) : MoimRoute
 }

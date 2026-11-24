@@ -17,5 +17,8 @@ interface ScheduleRepository {
 
     suspend fun addSchedules(schedules: List<Schedule>): Result<Unit>
 
+    /** 같은 id의 일정을 통째로 바꾼다 (알림·공개 대상 방도 새 값으로 교체) */
+    suspend fun updateSchedule(schedule: Schedule): Result<Unit>
+
     suspend fun deleteSchedule(id: String): Result<Unit>
 }

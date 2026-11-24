@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.LocationOn
@@ -66,6 +67,7 @@ private val ShortDate = DateTimeFormatter.ofPattern("M/d")
  * 1줄: [유형] 제목 ........ 🕑 시간
  * 2줄: 🔔 알림 (또는 공개 범위) ........ [📍 장소]
  *
+ * showDelete(수정 모드)이면 오른쪽에 [수정][삭제] 버튼이 붙는다.
  * hiddenOwnerName이 있으면 친구의 비공개 일정 → "OOO님의 일정입니다" + 시간만 보여 준다.
  */
 @Composable
@@ -75,6 +77,7 @@ fun ScheduleDayCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
     hiddenOwnerName: String? = null,
+    onEdit: () -> Unit = {},
 ) {
     val isHidden = hiddenOwnerName != null
     Surface(
@@ -136,7 +139,15 @@ fun ScheduleDayCard(
                     schedule.location?.let { place -> LocationPill(place) }
                 }
             }
+            // 수정 모드: [연필] 수정, [휴지통] 삭제
             if (showDelete) {
+                IconButton(onClick = onEdit, modifier = Modifier.align(Alignment.CenterVertically)) {
+                    Icon(
+                        Icons.Outlined.Edit,
+                        contentDescription = stringResource(R.string.calendar_edit_schedule),
+                        tint = Navy,
+                    )
+                }
                 IconButton(onClick = onDelete, modifier = Modifier.align(Alignment.CenterVertically)) {
                     Icon(
                         Icons.Outlined.DeleteOutline,

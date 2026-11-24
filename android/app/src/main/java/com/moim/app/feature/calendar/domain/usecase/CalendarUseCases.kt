@@ -12,6 +12,7 @@ import com.moim.app.feature.dm.domain.DmRepository
 import com.moim.app.feature.dm.domain.model.RoomType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -67,16 +68,11 @@ class AddScheduleUseCase @Inject constructor(
     private val repository: ScheduleRepository,
 ) {
     suspend operator fun invoke(input: NewSchedule): Result<Schedule> {
-        val title = input.title.trim()
-        if (title.isEmpty()) return Result.failure(IllegalArgumentException("title is blank"))
-        // 그룹공개인데 그룹을 하나도 안 고르면 아무에게도 안 보이니 막는다
-        if (input.visibility == Visibility.GROUP && input.sharedRoomIds.isEmpty()) {
-            return Result.failure(IllegalArgumentException("group is empty"))
-        }
+        validate(input)?.let { return Result.failure(it) }
         val isDeadline = input.type == ScheduleType.ASSIGNMENT
         val schedule = Schedule(
             id = UUID.randomUUID().toString(),
-            title = title,
+            title = input.title.trim(),
             type = input.type,
             startAt = input.startAt,
             endAt = if (isDeadline) input.startAt else input.startAt.plusHours(1),
@@ -89,6 +85,41 @@ class AddScheduleUseCase @Inject constructor(
         )
         return repository.addSchedules(listOf(schedule)).map { schedule }
     }
+}
+
+/**
+ * 기존 일정 수정. id·만든 곳(source)·메모·종일 여부는 그대로 두고 입력값만 바꾼다.
+ * 길이: 과제(마감)로 바뀌면 시작=끝, 원래 길이가 있던 일정이면 그 길이를 유지, 아니면 1시간.
+ */
+class UpdateScheduleUseCase @Inject constructor(
+    private val repository: ScheduleRepository,
+) {
+    suspend operator fun invoke(original: Schedule, input: NewSchedule): Result<Schedule> {
+        validate(input)?.let { return Result.failure(it) }
+        val isDeadline = input.type == ScheduleType.ASSIGNMENT
+        val originalLength = Duration.between(original.startAt, original.endAt)
+        val length = if (original.isDeadline || originalLength <= Duration.ZERO) Duration.ofHours(1) else originalLength
+        val schedule = original.copy(
+            title = input.title.trim(),
+            type = input.type,
+            startAt = input.startAt,
+            endAt = if (isDeadline) input.startAt else input.startAt.plus(length),
+            isDeadline = isDeadline,
+            visibility = input.visibility,
+            location = input.location?.trim()?.ifEmpty { null },
+            reminderDaysBefore = input.reminderDaysBefore.distinct().sorted(),
+            sharedRoomIds = if (input.visibility == Visibility.GROUP) input.sharedRoomIds else emptySet(),
+        )
+        return repository.updateSchedule(schedule).map { schedule }
+    }
+}
+
+/** 추가·수정 공통 검사. 문제가 없으면 null */
+private fun validate(input: NewSchedule): IllegalArgumentException? = when {
+    input.title.isBlank() -> IllegalArgumentException("title is blank")
+    // 그룹공개인데 그룹을 하나도 안 고르면 아무에게도 안 보이니 막는다
+    input.visibility == Visibility.GROUP && input.sharedRoomIds.isEmpty() -> IllegalArgumentException("group is empty")
+    else -> null
 }
 
 /** 일정 삭제 */

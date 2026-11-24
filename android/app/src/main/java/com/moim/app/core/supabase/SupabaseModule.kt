@@ -37,8 +37,8 @@ object SupabaseConfig {
 @Module
 @InstallIn(SingletonComponent::class)
 object SupabaseModule {
-    @Provides
-    @Singleton
+    @Provides // 이 함수가 SuperbaseClient 를 만들어줘
+    @Singleton // 딱 한 번만 만들고, 다들 그걸 같이 씀
     fun provideSupabaseClient(): SupabaseClient = createSupabaseClient(
         supabaseUrl = BuildConfig.SUPABASE_URL,
         supabaseKey = BuildConfig.SUPABASE_ANON_KEY,

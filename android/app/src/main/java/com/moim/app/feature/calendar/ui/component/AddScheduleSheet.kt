@@ -131,7 +131,10 @@ fun AddScheduleSheetContent(
             .navigationBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(MoimDimens.SpaceLg),
     ) {
-        SheetHeader(onClose = actions.onClose)
+        SheetHeader(
+            title = stringResource(if (form.isEditing) R.string.add_edit_title else R.string.add_title),
+            onClose = actions.onClose,
+        )
 
         // 1. 일정 이름
         Section(label = stringResource(R.string.add_name_label)) {
@@ -296,11 +299,16 @@ fun AddScheduleSheetContent(
                 } else {
                     Icon(Icons.Filled.Check, contentDescription = null)
                     Spacer(Modifier.width(MoimDimens.SpaceSm))
-                    Text(stringResource(R.string.add_save), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text(stringResource(if (form.isEditing) R.string.add_update else R.string.add_save), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 }
             }
-            TextButton(onClick = actions.onCancelToChat) {
-                Text(stringResource(R.string.add_cancel_to_chat), style = MaterialTheme.typography.labelLarge, color = TextSecondary)
+            // 수정할 때는 챗봇으로 돌아갈 일이 없으니 그냥 닫기
+            TextButton(onClick = if (form.isEditing) actions.onClose else actions.onCancelToChat) {
+                Text(
+                    text = stringResource(if (form.isEditing) R.string.add_edit_cancel else R.string.add_cancel_to_chat),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = TextSecondary,
+                )
             }
             Spacer(Modifier.height(MoimDimens.SpaceMd))
         }
@@ -331,7 +339,7 @@ fun AddScheduleSheetContent(
 }
 
 @Composable
-private fun SheetHeader(onClose: () -> Unit) {
+private fun SheetHeader(title: String, onClose: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -345,7 +353,7 @@ private fun SheetHeader(onClose: () -> Unit) {
         )
         Spacer(Modifier.width(MoimDimens.SpaceSm))
         Text(
-            text = stringResource(R.string.add_title),
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
