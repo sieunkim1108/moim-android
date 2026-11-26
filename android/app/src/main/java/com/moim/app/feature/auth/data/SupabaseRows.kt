@@ -22,6 +22,7 @@ internal data class ProfileRow(
     val major: String,
     @SerialName("planning_type") val planningType: String,
     @SerialName("default_visibility") val defaultVisibility: String,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
 )
 
 @Serializable
@@ -40,6 +41,13 @@ internal data class ProfilePatch(
     @SerialName("planning_type") val planningType: String,
     @SerialName("default_visibility") val defaultVisibility: String,
 )
+
+/** 프로필 사진 주소만 바꿀 때 */
+@Serializable
+internal data class ProfilePhotoPatch(@SerialName("avatar_url") val avatarUrl: String?)
+
+/** Storage에서 프로필 사진을 넣는 버킷 이름 (마이그레이션 20261126000001과 같아야 한다) */
+internal const val AVATAR_BUCKET = "avatars"
 
 /** Edge Function verify-email-code 응답 */
 @Serializable
@@ -63,5 +71,6 @@ internal fun ProfileRow.toModel(prefs: NotificationPrefsRow?): UserProfile {
         defaultVisibility = visibilityOf(defaultVisibility),
         schoolEmail = schoolEmail,
         notificationPrefs = prefs?.toModel() ?: type.defaultPrefs,
+        avatarUrl = avatarUrl,
     )
 }

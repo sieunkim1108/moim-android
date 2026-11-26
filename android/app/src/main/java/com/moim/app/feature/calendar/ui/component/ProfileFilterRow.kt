@@ -1,5 +1,8 @@
 package com.moim.app.feature.calendar.ui.component
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -57,6 +60,7 @@ fun ProfileFilterRow(
     onSelect: (String?) -> Unit,
     onAddFriendClick: () -> Unit,
     modifier: Modifier = Modifier,
+    myAvatarUrl: String? = null,
 ) {
     LazyRow(
         modifier = modifier,
@@ -68,6 +72,7 @@ fun ProfileFilterRow(
                 label = stringResource(R.string.calendar_me),
                 initial = myName.lastOrNull()?.toString().orEmpty(),
                 avatarColor = SecondaryContainer,
+                avatarUrl = myAvatarUrl,
                 selected = selectedFriendId == null,
                 onClick = { onSelect(null) },
             )
@@ -78,6 +83,7 @@ fun ProfileFilterRow(
                 label = friend.givenName,
                 initial = friend.givenName.take(1),
                 avatarColor = AvatarColors[index % AvatarColors.size],
+                avatarUrl = friend.avatarUrl,
                 selected = selectedFriendId == friend.id,
                 onClick = { onSelect(friend.id) },
             )
@@ -116,6 +122,7 @@ private fun ProfileItem(
     avatarColor: Color,
     selected: Boolean,
     onClick: () -> Unit,
+    avatarUrl: String? = null,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -140,6 +147,15 @@ private fun ProfileItem(
                     fontWeight = FontWeight.Bold,
                     color = Navy,
                 )
+                // 사진이 있으면 첫 글자 위에 덮는다 (불러오기 전·실패 시에는 첫 글자가 보임)
+                if (avatarUrl != null) {
+                    AsyncImage(
+                        model = avatarUrl,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
             if (selected) {
                 Box(

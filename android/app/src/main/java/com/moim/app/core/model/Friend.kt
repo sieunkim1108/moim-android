@@ -7,6 +7,7 @@ data class Friend(
     val id: String,
     val name: String,
     val major: String? = null, // 채팅 목록에 "소프트웨어학부"처럼 표시
+    val avatarUrl: String? = null, // 프로필 사진 (없으면 이름 첫 글자)
 )
 
 /** 이름에서 "성"을 뺀 부르는 이름 (예: 김시은 → 시은). 두 글자 이하는 그대로. */

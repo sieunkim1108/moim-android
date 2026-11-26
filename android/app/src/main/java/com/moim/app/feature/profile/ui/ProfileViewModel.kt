@@ -10,6 +10,7 @@ import com.moim.app.feature.auth.domain.model.UserProfile
 import com.moim.app.feature.auth.domain.usecase.LogoutUseCase
 import com.moim.app.feature.auth.domain.usecase.ObserveCurrentUserUseCase
 import com.moim.app.feature.auth.ui.signup.ReminderCategory
+import com.moim.app.feature.profile.domain.usecase.UpdateProfilePhotoUseCase
 import com.moim.app.feature.profile.domain.usecase.UpdateProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,12 +33,13 @@ data class ProfileDraft(
 )
 
 /** 화면 아래 잠깐 뜨는 안내 */
-enum class ProfileMessage { SAVED, NAME_EMPTY, MAJOR_EMPTY, FAILED }
+enum class ProfileMessage { SAVED, NAME_EMPTY, MAJOR_EMPTY, FAILED, PHOTO_UPDATED, PHOTO_FAILED }
 
 data class ProfileUiState(
     val user: UserProfile? = null, // 학번·이메일처럼 못 바꾸는 값은 여기서 읽는다
     val draft: ProfileDraft? = null, // null이면 아직 불러오는 중
     val isSaving: Boolean = false,
+    val isUploadingPhoto: Boolean = false, // 사진 올리는 중 (동그라미에 로딩 표시)
     val message: ProfileMessage? = null,
     val savedAndClose: Boolean = false, // 저장 후 메인으로
     val loggedOut: Boolean = false,     // 로그아웃 후 시작 화면으로
@@ -48,6 +50,7 @@ data class ProfileUiState(
 class ProfileViewModel @Inject constructor(
     observeCurrentUser: ObserveCurrentUserUseCase,
     private val updateProfile: UpdateProfileUseCase,
+    private val updateProfilePhoto: UpdateProfilePhotoUseCase,
     private val logout: LogoutUseCase,
 ) : ViewModel() {
 
@@ -117,6 +120,24 @@ class ProfileViewModel @Inject constructor(
             }.onFailure {
                 _uiState.update { it.copy(isSaving = false, message = ProfileMessage.FAILED) }
             }
+        }
+    }
+
+    /**
+     * 사진 선택기에서 사진을 골랐을 때. [저장하기]와 상관없이 바로 올린다
+     * (사진은 다른 칸처럼 "고치다가 취소"할 일이 거의 없어서).
+     */
+    fun onPhotoPicked(uri: String) {
+        if (_uiState.value.isUploadingPhoto) return
+        _uiState.update { it.copy(isUploadingPhoto = true) }
+        viewModelScope.launch {
+            updateProfilePhoto(uri)
+                .onSuccess { saved ->
+                    _uiState.update { it.copy(isUploadingPhoto = false, user = saved, message = ProfileMessage.PHOTO_UPDATED) }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isUploadingPhoto = false, message = ProfileMessage.PHOTO_FAILED) }
+                }
         }
     }
 

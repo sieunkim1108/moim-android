@@ -40,7 +40,7 @@ import com.moim.app.R
 import com.moim.app.feature.dm.domain.model.ChatRoom
 import com.moim.app.feature.dm.domain.model.RoomMember
 import com.moim.app.feature.dm.domain.model.RoomType
-import com.moim.app.ui.component.InitialAvatar
+import com.moim.app.ui.component.ProfileAvatar
 import com.moim.app.ui.component.NunsongiAvatar
 import com.moim.app.ui.theme.MoimDimens
 import com.moim.app.ui.theme.MoimTheme
@@ -176,15 +176,16 @@ private fun RoomAvatar(room: ChatRoom) {
             }
             RoomType.DIRECT -> {
                 val other = room.members.firstOrNull { !it.isMe } ?: room.members.first()
-                InitialAvatar(other.name, other.id, size = 52.dp)
+                ProfileAvatar(other.name, other.id, other.avatarUrl, size = 52.dp)
             }
             RoomType.GROUP -> {
                 val others = room.members.filter { !it.isMe }.take(2)
-                others.getOrNull(0)?.let { InitialAvatar(it.name, it.id, size = 36.dp) }
+                others.getOrNull(0)?.let { ProfileAvatar(it.name, it.id, it.avatarUrl, size = 36.dp) }
                 others.getOrNull(1)?.let {
-                    InitialAvatar(
+                    ProfileAvatar(
                         it.name,
                         it.id,
+                        it.avatarUrl,
                         size = 36.dp,
                         modifier = Modifier
                             .align(Alignment.BottomEnd)

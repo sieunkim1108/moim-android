@@ -11,6 +11,7 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
+import io.github.jan.supabase.storage.Storage
 import javax.inject.Singleton
 
 /** local.properties에 Supabase 주소/anon key가 들어 있는지 */
@@ -47,5 +48,6 @@ object SupabaseModule {
         install(Postgrest)
         install(Functions)
         install(Realtime)
+        install(Storage) // 프로필 사진 파일 저장소
     }
 }

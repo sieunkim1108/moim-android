@@ -30,6 +30,7 @@ data class UserProfile(
     val defaultVisibility: Visibility,
     val schoolEmail: String = "",
     val notificationPrefs: NotificationPrefs = planningType.defaultPrefs, // 시험/과제/약속별 알림 시점
+    val avatarUrl: String? = null, // 프로필 사진 주소 (없으면 이름 첫 글자 동그라미)
 )
 
 /** 프로필 수정(S-11)에서 바꿀 수 있는 값. 학번·학교 이메일은 바꿀 수 없다. */

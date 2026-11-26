@@ -210,7 +210,7 @@ private data class RoomRow(
             // 1:1 방은 이름이 없어서 상대 이름을 제목으로
             title = name ?: other?.name ?: "채팅방",
             subtitle = if (isGroup) null else other?.major,
-            members = members.map { RoomMember(it.id, it.name, isMe = it.id == myId) },
+            members = members.map { RoomMember(it.id, it.name, isMe = it.id == myId, avatarUrl = it.avatarUrl) },
             lastSenderName = lastSenderName?.let { if (it.length >= 3 && it != "눈송이") it.drop(1) else it },
             lastMessage = lastContent,
             lastAt = lastAt.fromDbTime(),
@@ -221,7 +221,12 @@ private data class RoomRow(
 }
 
 @Serializable
-private data class MemberRow(val id: String, val name: String, val major: String? = null)
+private data class MemberRow(
+    val id: String,
+    val name: String,
+    val major: String? = null,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+)
 
 @Serializable
 private data class MessageRow(

@@ -134,6 +134,10 @@ class FakeAuthRepository @Inject constructor(
         }
     }
 
+    /** 목업 모드에는 사진을 올릴 서버가 없다. Supabase 키를 넣으면 실제로 동작한다. */
+    override suspend fun updateProfilePhoto(jpeg: ByteArray): Result<UserProfile> =
+        Result.failure(UnsupportedOperationException("프로필 사진은 Supabase에 연결해야 바꿀 수 있어요"))
+
     override suspend fun updateProfile(update: ProfileUpdate): Result<UserProfile> {
         delay(FAKE_DELAY_MS)
         return mutex.withLock {

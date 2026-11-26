@@ -96,7 +96,7 @@ class SupabaseFriendRepository @Inject constructor(
 
     private suspend fun refreshFriends() {
         runCatching { supabase.postgrest.rpc("my_friends").decodeList<FriendRow>() }
-            .onSuccess { rows -> friends.value = rows.map { Friend(it.id, it.name, it.major) } }
+            .onSuccess { rows -> friends.value = rows.map { Friend(it.id, it.name, it.major, it.avatarUrl) } }
     }
 
     private suspend fun refreshIncoming() {
@@ -117,7 +117,12 @@ class SupabaseFriendRepository @Inject constructor(
 }
 
 @Serializable
-private data class FriendRow(val id: String, val name: String, val major: String? = null)
+private data class FriendRow(
+    val id: String,
+    val name: String,
+    val major: String? = null,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+)
 
 @Serializable
 private data class SearchRow(

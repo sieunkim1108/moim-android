@@ -1,5 +1,11 @@
 package com.moim.app.feature.profile.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,7 +51,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,7 +97,6 @@ import com.moim.app.ui.theme.SurfaceContainerLow
 import com.moim.app.ui.theme.TextPrimary
 import com.moim.app.ui.theme.TextSecondary
 import com.moim.app.ui.theme.White
-import kotlinx.coroutines.launch
 
 /**
  * S-11 프로필 수정 (보고서 화면 설계서 + Stitch: moim_프로필수정)
@@ -131,6 +135,7 @@ fun ProfileRoute(
             onReminderChange = viewModel::onReminderChange,
             onVisibilityChange = viewModel::onVisibilityChange,
             onSave = viewModel::onSave,
+            onPhotoPicked = viewModel::onPhotoPicked,
             onLogoutClick = viewModel::onLogoutClick,
             onLogoutConfirm = viewModel::onLogoutConfirm,
             onLogoutDismiss = viewModel::onLogoutDismiss,
@@ -149,6 +154,7 @@ data class ProfileActions(
     val onReminderChange: (ReminderCategory, Int) -> Unit,
     val onVisibilityChange: (Visibility) -> Unit,
     val onSave: () -> Unit,
+    val onPhotoPicked: (String) -> Unit,
     val onLogoutClick: () -> Unit,
     val onLogoutConfirm: () -> Unit,
     val onLogoutDismiss: () -> Unit,
@@ -162,8 +168,10 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val photoSoon = stringResource(R.string.profile_photo_soon)
+    // 안드로이드 사진 선택기: 저장소 권한 없이 사진 한 장을 고를 수 있다
+    val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) actions.onPhotoPicked(uri.toString())
+    }
 
     val messageText = uiState.message?.let {
         stringResource(
@@ -172,6 +180,8 @@ fun ProfileScreen(
                 ProfileMessage.NAME_EMPTY -> R.string.signup1_name_error
                 ProfileMessage.MAJOR_EMPTY -> R.string.signup1_major_error
                 ProfileMessage.FAILED -> R.string.error_unknown
+                ProfileMessage.PHOTO_UPDATED -> R.string.profile_photo_updated
+                ProfileMessage.PHOTO_FAILED -> R.string.profile_photo_failed
             },
         )
     }
@@ -250,7 +260,11 @@ fun ProfileScreen(
                 name = draft.name.ifBlank { user.name },
                 college = draft.college,
                 major = draft.major,
-                onPhotoClick = { scope.launch { snackbarHostState.showSnackbar(photoSoon) } },
+                avatarUrl = user.avatarUrl,
+                isUploading = uiState.isUploadingPhoto,
+                onPhotoClick = {
+                    pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                },
             )
             BasicInfoCard(user = user, draft = draft, actions = actions)
             PlanningTypeCard(selected = draft.planningType, onSelect = actions.onPlanningTypeChange)
@@ -276,12 +290,14 @@ fun ProfileScreen(
     }
 }
 
-/** 프로필 사진(눈송이) + 카메라 버튼, 이름 + 재학 칩, 학부·전공 */
+/** 프로필 사진(없으면 눈송이) + 카메라 버튼, 이름 + 재학 칩, 학부·전공 */
 @Composable
 private fun ProfileHeader(
     name: String,
     college: String,
     major: String?,
+    avatarUrl: String?,
+    isUploading: Boolean,
     onPhotoClick: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -294,18 +310,35 @@ private fun ProfileHeader(
                     .border(2.dp, SecondaryContainer, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painterResource(R.drawable.img_nunsongi),
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp),
-                )
+                if (avatarUrl != null) {
+                    AsyncImage(
+                        model = avatarUrl,
+                        contentDescription = stringResource(R.string.profile_photo),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.img_nunsongi),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp),
+                    )
+                }
+                if (isUploading) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.35f)),
+                        contentAlignment = Alignment.Center,
+                    ) { CircularProgressIndicator(color = White, strokeWidth = 3.dp, modifier = Modifier.size(32.dp)) }
+                }
             }
             Box(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
                     .background(Navy)
-                    .clickable(onClick = onPhotoClick),
+                    .clickable(enabled = !isUploading, onClick = onPhotoClick),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -625,7 +658,7 @@ private fun ProfileScreenPreview() {
                     defaultVisibility = Visibility.GROUP,
                 ),
             ),
-            actions = ProfileActions({}, {}, {}, {}, {}, { _, _ -> }, {}, {}, {}, {}, {}, {}),
+            actions = ProfileActions({}, {}, {}, {}, {}, { _, _ -> }, {}, {}, {}, {}, {}, {}, {}),
         )
     }
 }

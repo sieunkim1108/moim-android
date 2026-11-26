@@ -46,8 +46,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,8 +71,9 @@ import com.moim.app.feature.dm.domain.model.ChatRoom
 import com.moim.app.feature.dm.domain.model.RoomMember
 import com.moim.app.feature.dm.domain.model.RoomMessage
 import com.moim.app.feature.dm.domain.model.RoomType
+import com.moim.app.feature.dm.ui.component.EmojiPanel
 import com.moim.app.feature.dm.ui.component.MeetupSuggestionCard
-import com.moim.app.ui.component.InitialAvatar
+import com.moim.app.ui.component.ProfileAvatar
 import com.moim.app.ui.component.NunsongiAvatar
 import com.moim.app.ui.theme.MoimDimens
 import com.moim.app.ui.theme.MoimTheme
@@ -128,6 +134,10 @@ fun DmRoomScreen(
     val scope = rememberCoroutineScope()
     val comingSoon = stringResource(R.string.main_coming_soon)
     val showComingSoon: () -> Unit = { scope.launch { snackbarHostState.showSnackbar(comingSoon) } }
+
+    // 이모지 판이 열려 있는지 (화면 안에서만 쓰는 상태라 ViewModel에 두지 않는다)
+    var showEmoji by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     val listState = rememberLazyListState()
     val itemCount = uiState.messages.size + 1
@@ -197,14 +207,29 @@ fun DmRoomScreen(
             )
         },
         bottomBar = {
-            RoomInputBar(
-                text = uiState.input,
-                onTextChange = onInputChange,
-                onSend = onSend,
-                onAttach = showComingSoon,
-                onEmoji = showComingSoon,
-                modifier = Modifier.imePadding(),
-            )
+            Column(Modifier.imePadding()) {
+                RoomInputBar(
+                    text = uiState.input,
+                    onTextChange = onInputChange,
+                    onSend = onSend,
+                    onAttach = showComingSoon,
+                    // 😊: 이모지 판 열기/닫기. 열 때는 입력칸 포커스를 풀어서 키보드를 내린다
+                    // (그래야 입력칸을 다시 누르면 포커스가 생기면서 판이 닫힌다)
+                    onEmoji = {
+                        if (!showEmoji) focusManager.clearFocus()
+                        showEmoji = !showEmoji
+                    },
+                    emojiOpen = showEmoji,
+                    // 이모지 판 아래에 내비게이션 바 여백을 주므로 입력줄에서는 빼기
+                    modifier = if (showEmoji) Modifier else Modifier.navigationBarsPadding(),
+                )
+                if (showEmoji) {
+                    EmojiPanel(
+                        onPick = { emoji -> onInputChange(uiState.input + emoji) },
+                        modifier = Modifier.navigationBarsPadding(),
+                    )
+                }
+            }
         },
     ) { innerPadding ->
         LazyColumn(
@@ -236,7 +261,9 @@ fun DmRoomScreen(
                         if (message.isMine) {
                             MyBubble(message.text, message.sentAt)
                         } else {
-                            OtherBubble(message.senderId, message.senderName, message.text, message.sentAt)
+                            // 보낸 사람 사진은 방 멤버 목록에서 찾는다
+                            val avatarUrl = room?.members?.firstOrNull { it.id == message.senderId }?.avatarUrl
+                            OtherBubble(message.senderId, message.senderName, avatarUrl, message.text, message.sentAt)
                         }
                     }
                     is RoomMessage.Bot -> BotBubble(message.text, message.sentAt)
@@ -260,9 +287,9 @@ fun DmRoomScreen(
 }
 
 @Composable
-private fun OtherBubble(senderId: String, name: String, text: String, sentAt: LocalDateTime) {
+private fun OtherBubble(senderId: String, name: String, avatarUrl: String?, text: String, sentAt: LocalDateTime) {
     Row {
-        InitialAvatar(name, senderId, size = 40.dp)
+        ProfileAvatar(name, senderId, avatarUrl, size = 40.dp)
         Spacer(Modifier.width(MoimDimens.SpaceSm))
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(name, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = TextPrimary)
@@ -344,12 +371,12 @@ private fun RoomInputBar(
     onAttach: () -> Unit,
     onEmoji: () -> Unit,
     modifier: Modifier = Modifier,
+    emojiOpen: Boolean = false,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(SkyBlueLight)
-            .navigationBarsPadding()
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MoimDimens.SpaceSm),
@@ -380,11 +407,18 @@ private fun RoomInputBar(
                     cursorBrush = SolidColor(Navy),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                     keyboardActions = KeyboardActions(onSend = { onSend() }),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        // 입력칸을 누르면 키보드가 올라오니까 이모지 판은 닫는다
+                        .onFocusChanged { if (it.isFocused && emojiOpen) onEmoji() },
                 )
             }
             IconButton(onClick = onEmoji) {
-                Icon(Icons.Outlined.EmojiEmotions, contentDescription = stringResource(R.string.room_emoji), tint = TextSecondary)
+                Icon(
+                    Icons.Outlined.EmojiEmotions,
+                    contentDescription = stringResource(R.string.room_emoji),
+                    tint = if (emojiOpen) Navy else TextSecondary, // 열려 있으면 파란색
+                )
             }
         }
         IconButton(

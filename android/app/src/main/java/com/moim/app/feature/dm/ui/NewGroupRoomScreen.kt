@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moim.app.R
 import com.moim.app.core.model.Friend
-import com.moim.app.ui.component.InitialAvatar
+import com.moim.app.ui.component.ProfileAvatar
 import com.moim.app.ui.component.MoimBackTopBar
 import com.moim.app.ui.component.MoimOutlinedButton
 import com.moim.app.ui.component.MoimPrimaryButton
@@ -185,7 +185,7 @@ private fun FriendCheckRow(friend: Friend, checked: Boolean, onToggle: () -> Uni
             .padding(horizontal = MoimDimens.SpaceMd, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        InitialAvatar(name = friend.name, id = friend.id)
+        ProfileAvatar(name = friend.name, id = friend.id, avatarUrl = friend.avatarUrl)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(

@@ -34,6 +34,9 @@ interface AuthRepository {
     /** 프로필 수정 저장 (profiles, notification_prefs 갱신) */
     suspend fun updateProfile(update: ProfileUpdate): Result<UserProfile>
 
+    /** 프로필 사진 바꾸기: JPEG 바이트를 올리고 profiles.avatar_url을 새 주소로 바꾼다 */
+    suspend fun updateProfilePhoto(jpeg: ByteArray): Result<UserProfile>
+
     /** 로그아웃: 세션과 자동 로그인 정보를 지운다 */
     suspend fun logout()
 }

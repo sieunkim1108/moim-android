@@ -10,6 +10,7 @@ data class RoomMember(
     val id: String,
     val name: String,
     val isMe: Boolean = false,
+    val avatarUrl: String? = null, // 프로필 사진
 )
 
 /** 채팅 목록 한 줄 */

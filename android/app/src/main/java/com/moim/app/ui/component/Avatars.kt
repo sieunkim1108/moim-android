@@ -14,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.moim.app.R
 import com.moim.app.ui.theme.MoimTheme
 import com.moim.app.ui.theme.Navy
@@ -58,6 +60,33 @@ fun InitialAvatar(
             fontWeight = FontWeight.Bold,
             color = Navy,
         )
+    }
+}
+
+/**
+ * 프로필 사진 동그라미. 사진이 없거나 불러오는 중·실패하면 이름 첫 글자 동그라미가 보인다.
+ * (첫 글자 동그라미를 깔고 그 위에 사진을 덮는 방식이라 따로 실패 처리를 안 해도 된다)
+ */
+@Composable
+fun ProfileAvatar(
+    name: String,
+    id: String,
+    avatarUrl: String?,
+    modifier: Modifier = Modifier,
+    size: Dp = 44.dp,
+) {
+    Box(modifier = modifier.size(size), contentAlignment = Alignment.Center) {
+        InitialAvatar(name = name, id = id, size = size)
+        if (avatarUrl != null) {
+            AsyncImage(
+                model = avatarUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(size)
+                    .clip(CircleShape),
+            )
+        }
     }
 }
 

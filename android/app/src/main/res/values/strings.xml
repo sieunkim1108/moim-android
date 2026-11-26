@@ -374,7 +374,9 @@
     <!-- S-11 프로필 수정 -->
     <string name="profile_title">Edit Profile</string>
     <string name="profile_photo_change">프로필 사진 변경</string>
-    <string name="profile_photo_soon">프로필 사진 변경은 다음 버전에서 만나요 💙</string>
+    <string name="profile_photo">프로필 사진</string>
+    <string name="profile_photo_updated">프로필 사진을 바꿨어요</string>
+    <string name="profile_photo_failed">사진을 올리지 못했어요. 다시 시도해 주세요</string>
     <string name="profile_enrolled">재학</string>
     <string name="profile_basic_title">기본 정보</string>
     <string name="profile_school">숙명여자대학교</string>

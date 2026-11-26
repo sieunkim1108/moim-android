@@ -94,8 +94,13 @@ dependencies {
     implementation(libs.supabase.postgrest)
     implementation(libs.supabase.functions)
     implementation(libs.supabase.realtime)
+    implementation(libs.supabase.storage) // 프로필 사진 파일 저장
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
+
+    // 프로필 사진 불러오기 (Coil)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     // 알림 예약 (WorkManager)
     implementation(libs.androidx.work.runtime)

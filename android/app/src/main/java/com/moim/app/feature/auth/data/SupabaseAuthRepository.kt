@@ -18,6 +18,8 @@ import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.functions.functions
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
+import io.ktor.http.ContentType
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -148,6 +150,32 @@ class SupabaseAuthRepository @Inject constructor(
         supabase.from("notification_prefs").update(update.notificationPrefs.toRow()) {
             filter { eq("user_id", uid) }
         }
+        loadMyProfile()
+    }
+
+    /**
+     * 프로필 사진 바꾸기.
+     * 1) Storage avatars/<내 uid>/<지금 시각>.jpg 로 올린다 (매번 새 이름이라 옛 사진이 캐시에 남지 않는다)
+     * 2) profiles.avatar_url을 새 공개 주소로 바꾼다
+     * 3) 예전 사진 파일은 지운다 (실패해도 사진 바꾸기는 성공으로 본다)
+     */
+    override suspend fun updateProfilePhoto(jpeg: ByteArray): Result<UserProfile> = call {
+        val uid = myId()
+        val bucket = supabase.storage.from(AVATAR_BUCKET)
+        val oldUrl = _currentUser.value?.avatarUrl
+
+        val path = "$uid/${System.currentTimeMillis()}.jpg"
+        bucket.upload(path, jpeg) {
+            upsert = false
+            contentType = ContentType.Image.JPEG
+        }
+        val url = bucket.publicUrl(path)
+        supabase.from("profiles").update(ProfilePhotoPatch(avatarUrl = url)) { filter { eq("id", uid) } }
+
+        oldUrl?.substringAfter("/$AVATAR_BUCKET/", missingDelimiterValue = "")
+            ?.takeIf { it.startsWith("$uid/") }
+            ?.let { oldPath -> runCatching { bucket.delete(oldPath) } }
+
         loadMyProfile()
     }
 

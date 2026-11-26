@@ -57,6 +57,7 @@ data class CalendarUiState(
     val selectedDate: LocalDate,
     val visibleMonth: YearMonth,
     val myName: String = "",
+    val myAvatarUrl: String? = null,
     val friends: List<Friend> = emptyList(),
     val shareGroups: List<ShareGroup> = emptyList(), // 그룹공개 때 고를 단체방
     val selectedFriendId: String? = null, // null이면 내 캘린더
@@ -120,6 +121,7 @@ class CalendarViewModel @Inject constructor(
             selectedDate = l.selectedDate,
             visibleMonth = l.visibleMonth,
             myName = user?.name.orEmpty(),
+            myAvatarUrl = user?.avatarUrl,
             friends = friends,
             shareGroups = groups,
             selectedFriendId = l.selectedFriendId,

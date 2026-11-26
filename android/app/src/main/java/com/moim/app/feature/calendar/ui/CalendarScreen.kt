@@ -219,6 +219,7 @@ fun CalendarScreen(
             item(key = "profiles") {
                 ProfileFilterRow(
                     myName = uiState.myName,
+                    myAvatarUrl = uiState.myAvatarUrl,
                     friends = uiState.friends,
                     selectedFriendId = uiState.selectedFriendId,
                     onSelect = onOwnerSelect,
